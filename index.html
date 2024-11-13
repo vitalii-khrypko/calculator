@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Calculator</title>
+  <style>
+    body {
+      width: 300px;
+      margin: auto;
+    }
+    .div_main {
+      border: 15px solid rgba(0, 0, 0, 0.82);
+      height: 400px;
+      margin-top: 20px;
+      border-radius: 20px;
+    }
+    .div_sub {
+      display: flex;
+      justify-content: space-around;
+    }
+    .p_calculate {
+      border: 10px solid navajowhite;
+      height: 30px;
+      border-radius: 10px;
+      padding-left: 10px;
+      margin: 15px 10px;
+      font-family: "Arial Black";
+    }
+    button {
+      padding: 20px;
+      margin-bottom: 5px;
+      border-radius: 10px;
+    }
+    .div_bottom {
+      padding: 17px 30px;
+    }
+    .dot {
+      font-size: 15px;
+    }
+  </style>
+</head>
+<body>
+<div class="div_main">
+
+  <p class="p_calculate"></p>
+
+  <div class="div_sub">
+    <button id="btn_divide">/</button>
+    <button id="btn_multiply">x</button>
+    <button id="btn_add">+</button>
+    <button id="btn_subtract">-</button>
+  </div>
+
+  <div class="div_sub">
+    <button>6</button>
+    <button>7</button>
+    <button>8</button>
+    <button>9</button>
+  </div>
+
+  <div class="div_sub">
+    <button>3</button>
+    <button>4</button>
+    <button>5</button>
+    <button>6</button>
+  </div>
+
+  <div class="div_sub">
+    <button>0</button>
+    <button>1</button>
+    <button>2</button>
+    <button>3</button>
+  </div>
+
+  <div class="div_sub">
+    <button id="btn_reset" class="div_bottom">C</button>
+    <button class="div_bottom dot">.</button>
+    <button id="btn_equals" class="div_bottom">=</button>
+  </div>
+</div>
+
+<script>
+  let buttons = document.querySelectorAll("button");
+  let p = document.querySelector(".p_calculate");
+
+  let divide = document.querySelector("#btn_divide");
+  let multiply = document.querySelector("#btn_multiply");
+  let add = document.querySelector("#btn_add");
+  let subtract = document.querySelector("#btn_subtract");
+  let equals = document.querySelector("#btn_equals");
+
+  let reset = document.querySelector("#btn_reset");
+
+  let firstValue = 0;
+  let secondValue = 0;
+  let operation = "";
+
+  divide.addEventListener("click", function() {
+    if (p.innerText !== "") {
+      firstValue = Number(p.innerText);
+      p.innerText = "";
+      operation = "divide";
+    }
+  });
+
+  multiply.addEventListener("click", function() {
+    if (p.innerText !== "") {
+      firstValue = Number(p.innerText);
+      p.innerText = "";
+      operation = "multiply";
+    }
+  });
+
+  add.addEventListener("click", function() {
+    if (p.innerText !== "") {
+      firstValue = Number(p.innerText);
+      p.innerText = "";
+      operation = "add";
+    }
+  });
+
+  subtract.addEventListener("click", function() {
+    if (p.innerText !== "") {
+      firstValue = Number(p.innerText);
+      p.innerText = "";
+      operation = "subtract";
+    }
+  });
+
+  equals.addEventListener("click", function() {
+    if (p.innerText === "0") {
+      p.innerText = "0"
+    } else if (p.innerText !== "" && p.innerText !== "0") {
+      secondValue = Number(p.innerText);
+
+      switch (operation) {
+        case "divide":
+          result = firstValue / secondValue;
+          break;
+        case "multiply":
+          result = firstValue * secondValue;
+          break;
+        case "add":
+          result = firstValue + secondValue;
+          break;
+        case "subtract":
+          result = firstValue - secondValue;
+          break;
+      }
+      p.innerText = result;
+    }
+  });
+
+  reset.addEventListener("click", function() {
+    p.innerText = "";
+  });
+
+  buttons.forEach(function(btn) {
+    btn.addEventListener("click", function(e) {
+      switch (e.target.innerText) {
+        case "1":
+          p.innerText += "1";
+          break;
+        case "2":
+          p.innerText += "2";
+          break;
+        case "3":
+          p.innerText += "3";
+          break;
+        case "4":
+          p.innerText += "4";
+          break;
+        case "5":
+          p.innerText += "5";
+          break;
+        case "6":
+          p.innerText += "6";
+          break;
+        case "7":
+          p.innerText += "7";
+          break;
+        case "8":
+          p.innerText += "8";
+          break;
+        case "9":
+          p.innerText += "9";
+          break;
+        case "0":
+          p.innerText += "0";
+          break;
+        case ".":
+          p.innerText += ".";
+          break;
+      }
+    });
+  });
+</script>
+</body>
+</html>
