@@ -69,10 +69,9 @@
   </div>
 
   <div class="div_sub">
-    <button>0</button>
-    <button>1</button>
-    <button>2</button>
-    <button>3</button>
+    <button class="div_bottom">0</button>
+    <button class="div_bottom">1</button>
+    <button class="div_bottom">2</button>
   </div>
 
   <div class="div_sub">
@@ -94,51 +93,73 @@
 
   let reset = document.querySelector("#btn_reset");
 
-  let firstValue = 0;
-  let secondValue = 0;
+  let firstValue;
+  let secondValue;
+  let thirdValue;
   let operation = "";
+  let secondOperation = "";
 
   divide.addEventListener("click", function() {
-    if (p.innerText !== "") {
+    if (p.innerText !== "" && operation === "") {
       firstValue = Number(p.innerText);
       p.innerText = "";
       operation = "divide";
+    } else {
+      secondValue = Number(p.innerText);
+      p.innerText = "";
+      secondOperation = "divide";
     }
   });
 
   multiply.addEventListener("click", function() {
-    if (p.innerText !== "") {
+    if (p.innerText !== "" && operation === "") {
       firstValue = Number(p.innerText);
       p.innerText = "";
       operation = "multiply";
+    } else {
+      secondValue = Number(p.innerText);
+      p.innerText = "";
+      secondOperation = "multiply";
     }
   });
 
   add.addEventListener("click", function() {
-    if (p.innerText !== "") {
+    if (p.innerText !== "" && operation === "") {
       firstValue = Number(p.innerText);
       p.innerText = "";
       operation = "add";
+    } else {
+      secondValue = Number(p.innerText);
+      p.innerText = "";
+      secondOperation = "add";
     }
   });
 
   subtract.addEventListener("click", function() {
-    if (p.innerText !== "") {
+    if (p.innerText !== "" && operation === "") {
       firstValue = Number(p.innerText);
       p.innerText = "";
       operation = "subtract";
+    } else {
+      secondValue = Number(p.innerText);
+      p.innerText = "";
+      secondOperation = "subtract";
     }
   });
-
+  
   equals.addEventListener("click", function() {
-    if (p.innerText === "0") {
-      p.innerText = "0"
-    } else if (p.innerText !== "" && p.innerText !== "0") {
-      secondValue = Number(p.innerText);
+    if (p.innerText === "") {
+      return; // Якщо поле пусте, не виконуємо обчислення
+    }
 
+    let result;
+
+    if (!secondOperation) {
+      // Якщо немає другої операції, виконуємо одноопераційне обчислення
+      secondValue = Number(p.innerText);
       switch (operation) {
         case "divide":
-          result = firstValue / secondValue;
+          result = secondValue !== 0 ? firstValue / secondValue : 0; // Захист від ділення на нуль
           break;
         case "multiply":
           result = firstValue * secondValue;
@@ -150,8 +171,75 @@
           result = firstValue - secondValue;
           break;
       }
-      p.innerText = result;
+    } else {
+      thirdValue = Number(p.innerText); // Зберігаємо значення третього числа, якщо є
+      // Якщо є друга операція, перевіряємо пріоритетність
+      if ((operation === "add" || operation === "subtract") &&
+              (secondOperation === "multiply" || secondOperation === "divide")) {
+
+        // Спочатку обчислюємо другорядну операцію (множення або ділення)
+        let intermediateResult;
+        switch (secondOperation) {
+          case "multiply":
+            intermediateResult = secondValue * thirdValue;
+            break;
+          case "divide":
+            intermediateResult = thirdValue !== 0 ? secondValue / thirdValue : 0; // Захист від ділення на нуль
+            break;
+        }
+
+        // Потім застосовуємо першу операцію (додавання або віднімання)
+        switch (operation) {
+          case "add":
+            result = firstValue + intermediateResult;
+            break;
+          case "subtract":
+            result = firstValue - intermediateResult;
+            break;
+        }
+      } else {
+        // Виконуємо обчислення у порядку запису, якщо пріоритет операцій однаковий
+        switch (operation) {
+          case "divide":
+            result = (secondOperation === "divide") ? (firstValue / secondValue / thirdValue) :
+                    (secondOperation === "multiply") ? (firstValue / secondValue * thirdValue) :
+                            (secondOperation === "add") ? (firstValue / secondValue + thirdValue) :
+                                    firstValue / secondValue - thirdValue;
+            break;
+          case "multiply":
+            result = (secondOperation === "divide") ? (firstValue * secondValue / thirdValue) :
+                    (secondOperation === "multiply") ? (firstValue * secondValue * thirdValue) :
+                            (secondOperation === "add") ? (firstValue * secondValue + thirdValue) :
+                                    firstValue * secondValue - thirdValue;
+            break;
+          case "add":
+            result = (secondOperation === "divide") ? (firstValue + secondValue / thirdValue) :
+                    (secondOperation === "multiply") ? (firstValue + secondValue * thirdValue) :
+                            (secondOperation === "add") ? (firstValue + secondValue + thirdValue) :
+                                    firstValue + secondValue - thirdValue;
+            break;
+          case "subtract":
+            result = (secondOperation === "divide") ? (firstValue - secondValue / thirdValue) :
+                    (secondOperation === "multiply") ? (firstValue - secondValue * thirdValue) :
+                            (secondOperation === "add") ? (firstValue - secondValue + thirdValue) :
+                                    firstValue - secondValue - thirdValue;
+            break;
+        }
+      }
     }
+
+    // Перевіряємо наявність NaN і замінюємо його на 0, якщо потрібно
+    if (isNaN(result)) {
+      result = 0;
+    }
+
+    // Показуємо результат і готуємось до наступного обчислення
+    p.innerText = result;
+    firstValue = result; // Зберігаємо результат для подальших обчислень
+    secondValue = undefined;
+    thirdValue = undefined;
+    operation = "";
+    secondOperation = "";
   });
 
   reset.addEventListener("click", function() {
