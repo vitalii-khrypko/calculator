@@ -90,201 +90,89 @@
   let add = document.querySelector("#btn_add");
   let subtract = document.querySelector("#btn_subtract");
   let equals = document.querySelector("#btn_equals");
-
   let reset = document.querySelector("#btn_reset");
 
-  let firstValue;
-  let secondValue;
-  let thirdValue;
-  let operation = "";
-  let secondOperation = "";
+  let operations = []; // Масив для чисел і операторів
+  let currentInput = ""; // Поточний ввід числа
 
-  divide.addEventListener("click", function() {
-    if (p.innerText !== "" && operation === "") {
-      firstValue = Number(p.innerText);
-      p.innerText = "";
-      operation = "divide";
-    } else {
-      secondValue = Number(p.innerText);
-      p.innerText = "";
-      secondOperation = "divide";
-    }
-  });
+  // Додавання числа або крапки до поточного введення
+  buttons.forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      const value = e.target.innerText;
 
-  multiply.addEventListener("click", function() {
-    if (p.innerText !== "" && operation === "") {
-      firstValue = Number(p.innerText);
-      p.innerText = "";
-      operation = "multiply";
-    } else {
-      secondValue = Number(p.innerText);
-      p.innerText = "";
-      secondOperation = "multiply";
-    }
-  });
-
-  add.addEventListener("click", function() {
-    if (p.innerText !== "" && operation === "") {
-      firstValue = Number(p.innerText);
-      p.innerText = "";
-      operation = "add";
-    } else {
-      secondValue = Number(p.innerText);
-      p.innerText = "";
-      secondOperation = "add";
-    }
-  });
-
-  subtract.addEventListener("click", function() {
-    if (p.innerText !== "" && operation === "") {
-      firstValue = Number(p.innerText);
-      p.innerText = "";
-      operation = "subtract";
-    } else {
-      secondValue = Number(p.innerText);
-      p.innerText = "";
-      secondOperation = "subtract";
-    }
-  });
-  
-  equals.addEventListener("click", function() {
-    if (p.innerText === "") {
-      return; // Якщо поле пусте, не виконуємо обчислення
-    }
-
-    let result;
-
-    if (!secondOperation) {
-      // Якщо немає другої операції, виконуємо одноопераційне обчислення
-      secondValue = Number(p.innerText);
-      switch (operation) {
-        case "divide":
-          result = secondValue !== 0 ? firstValue / secondValue : 0; // Захист від ділення на нуль
-          break;
-        case "multiply":
-          result = firstValue * secondValue;
-          break;
-        case "add":
-          result = firstValue + secondValue;
-          break;
-        case "subtract":
-          result = firstValue - secondValue;
-          break;
-      }
-    } else {
-      thirdValue = Number(p.innerText); // Зберігаємо значення третього числа, якщо є
-      // Якщо є друга операція, перевіряємо пріоритетність
-      if ((operation === "add" || operation === "subtract") &&
-              (secondOperation === "multiply" || secondOperation === "divide")) {
-
-        // Спочатку обчислюємо другорядну операцію (множення або ділення)
-        let intermediateResult;
-        switch (secondOperation) {
-          case "multiply":
-            intermediateResult = secondValue * thirdValue;
-            break;
-          case "divide":
-            intermediateResult = thirdValue !== 0 ? secondValue / thirdValue : 0; // Захист від ділення на нуль
-            break;
-        }
-
-        // Потім застосовуємо першу операцію (додавання або віднімання)
-        switch (operation) {
-          case "add":
-            result = firstValue + intermediateResult;
-            break;
-          case "subtract":
-            result = firstValue - intermediateResult;
-            break;
-        }
-      } else {
-        // Виконуємо обчислення у порядку запису, якщо пріоритет операцій однаковий
-        switch (operation) {
-          case "divide":
-            result = (secondOperation === "divide") ? (firstValue / secondValue / thirdValue) :
-                    (secondOperation === "multiply") ? (firstValue / secondValue * thirdValue) :
-                            (secondOperation === "add") ? (firstValue / secondValue + thirdValue) :
-                                    firstValue / secondValue - thirdValue;
-            break;
-          case "multiply":
-            result = (secondOperation === "divide") ? (firstValue * secondValue / thirdValue) :
-                    (secondOperation === "multiply") ? (firstValue * secondValue * thirdValue) :
-                            (secondOperation === "add") ? (firstValue * secondValue + thirdValue) :
-                                    firstValue * secondValue - thirdValue;
-            break;
-          case "add":
-            result = (secondOperation === "divide") ? (firstValue + secondValue / thirdValue) :
-                    (secondOperation === "multiply") ? (firstValue + secondValue * thirdValue) :
-                            (secondOperation === "add") ? (firstValue + secondValue + thirdValue) :
-                                    firstValue + secondValue - thirdValue;
-            break;
-          case "subtract":
-            result = (secondOperation === "divide") ? (firstValue - secondValue / thirdValue) :
-                    (secondOperation === "multiply") ? (firstValue - secondValue * thirdValue) :
-                            (secondOperation === "add") ? (firstValue - secondValue + thirdValue) :
-                                    firstValue - secondValue - thirdValue;
-            break;
-        }
-      }
-    }
-
-    // Перевіряємо наявність NaN і замінюємо його на 0, якщо потрібно
-    if (isNaN(result)) {
-      result = 0;
-    }
-
-    // Показуємо результат і готуємось до наступного обчислення
-    p.innerText = result;
-    firstValue = result; // Зберігаємо результат для подальших обчислень
-    secondValue = undefined;
-    thirdValue = undefined;
-    operation = "";
-    secondOperation = "";
-  });
-
-  reset.addEventListener("click", function() {
-    p.innerText = "";
-  });
-
-  buttons.forEach(function(btn) {
-    btn.addEventListener("click", function(e) {
-      switch (e.target.innerText) {
-        case "1":
-          p.innerText += "1";
-          break;
-        case "2":
-          p.innerText += "2";
-          break;
-        case "3":
-          p.innerText += "3";
-          break;
-        case "4":
-          p.innerText += "4";
-          break;
-        case "5":
-          p.innerText += "5";
-          break;
-        case "6":
-          p.innerText += "6";
-          break;
-        case "7":
-          p.innerText += "7";
-          break;
-        case "8":
-          p.innerText += "8";
-          break;
-        case "9":
-          p.innerText += "9";
-          break;
-        case "0":
-          p.innerText += "0";
-          break;
-        case ".":
-          p.innerText += ".";
-          break;
+      if (!isNaN(value) || value === ".") {
+        currentInput += value;
+        p.innerText = currentInput;
       }
     });
   });
+
+  // Обробка оператора
+  function handleOperator(operator) {
+    if (currentInput !== "") {
+      operations.push(Number(currentInput)); // Додаємо поточне число
+      currentInput = ""; // Очищуємо ввід
+    }
+    if (operations.length > 0) {
+      operations.push(operator); // Додаємо оператор
+    }
+  }
+
+  // Події для операторів
+  divide.addEventListener("click", () => handleOperator("/"));
+  multiply.addEventListener("click", () => handleOperator("*"));
+  add.addEventListener("click", () => handleOperator("+"));
+  subtract.addEventListener("click", () => handleOperator("-"));
+
+  // Обчислення результату
+  equals.addEventListener("click", () => {
+    if (currentInput !== "") {
+      operations.push(Number(currentInput)); // Додаємо останнє число
+      currentInput = ""; // Очищуємо ввід
+    }
+
+    // Виконання операцій за пріоритетом
+    let result = calculate();
+    p.innerText = result;
+    operations = [result]; // Зберігаємо результат для подальших обчислень
+  });
+
+  // Скидання калькулятора
+  reset.addEventListener("click", () => {
+    p.innerText = "";
+    operations = [];
+    currentInput = "";
+  });
+
+  // Функція для обчислення
+  function calculate() {
+    let numbers = [...operations.filter((item) => typeof item === "number")];
+    let operators = [...operations.filter((item) => typeof item === "string")];
+
+    // Виконання операцій з пріоритетом: * і /
+    while (operators.includes("*") || operators.includes("/")) {
+      let index = operators.findIndex((op) => op === "*" || op === "/");
+      let result =
+              operators[index] === "*"
+                      ? numbers[index] * numbers[index + 1]
+                      : numbers[index] / numbers[index + 1];
+      numbers.splice(index, 2, result); // Замінюємо два числа результатом
+      operators.splice(index, 1); // Видаляємо оператор
+    }
+
+    // Виконання операцій: + і -
+    while (operators.length > 0) {
+      let result =
+              operators[0] === "+"
+                      ? numbers[0] + numbers[1]
+                      : numbers[0] - numbers[1];
+      numbers.splice(0, 2, result); // Замінюємо два числа результатом
+      operators.shift(); // Видаляємо оператор
+    }
+
+    return numbers[0]; // Повертаємо результат
+  }
+
 </script>
 </body>
 </html>
