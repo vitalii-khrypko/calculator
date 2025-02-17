@@ -16,3 +16,8 @@ This project is a simple calculator built with JavaScript that allows performing
 1. Clone the repository to your local machine:
    ```bash
    git clone https://github.com/vitalii-khrypko/calculator.git
+2. Open the index.html file in your browser.
+The project doesn't require any additional dependencies or configurations, so you can run it directly in your browser.
+
+## Contributors
+**Vitalii Khrypko** - Project author.
